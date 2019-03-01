@@ -1,6 +1,5 @@
 import nltk
 import random
-#from nltk.corpus import movie_reviews
 from nltk.classify.scikitlearn import SklearnClassifier
 import pickle
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
@@ -88,12 +87,19 @@ def find_features(document):
 
     return features
 
+featuresets = [(find_features(rev), category) for (rev, category) in documents]
+        
+training_set = featuresets[:1900]
+testing_set =  featuresets[1900:]
+
+classifier_f = open("naivebayes.pickle","rb")
+classifier = pickle.load(classifier_f)
+classifier_f.close()
 
 classifier = nltk.NaiveBayesClassifier.train(training_set)
 print("Original Naive Bayes Algo accuracy percent:", (nltk.classify.accuracy(classifier, testing_set))*100)
 classifier.show_most_informative_features(15)
 
-###############
 save_classifier = open("/home/sambhavgarrg/Avik-ML100/Mine/TwitPap/pickled_algos/originalnaivebayes5k.pickle","wb")
 pickle.dump(classifier, save_classifier)
 save_classifier.close()
@@ -130,11 +136,6 @@ print("LinearSVC_classifier accuracy percent:", (nltk.classify.accuracy(LinearSV
 save_classifier = open("/home/sambhavgarrg/Avik-ML100/Mine/TwitPap/pickled_algos/LinearSVC_classifier5k.pickle","wb")
 pickle.dump(LinearSVC_classifier, save_classifier)
 save_classifier.close()
-
-
-##NuSVC_classifier = SklearnClassifier(NuSVC())
-##NuSVC_classifier.train(training_set)
-##print("NuSVC_classifier accuracy percent:", (nltk.classify.accuracy(NuSVC_classifier, testing_set))*100)
 
 
 SGDC_classifier = SklearnClassifier(SGDClassifier())
